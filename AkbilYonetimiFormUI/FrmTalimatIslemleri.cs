@@ -1,6 +1,6 @@
 ﻿
 using AkbilYonetimiBussinessLayer;
-using AkbilYonetimiEntityLayer.Entities;
+using AkbilYonetimiDataLayer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace AkbilYonetimiFormUI
 {
     public partial class FrmTalimatIslemleri : Form
     {
-       
+        AKBİLYONETİMİDBEntities akbilYonetimi = new AKBİLYONETİMİDBEntities();
         public FrmTalimatIslemleri()
         {
             InitializeComponent();
@@ -46,7 +46,9 @@ namespace AkbilYonetimiFormUI
         {
             try
             {
-               // yeni kodlar gelecek
+                lblBekleyenTalimat.Text=
+                akbilYonetimi.SP_BekleyenTalimatSayisi
+                    (GenelIslemler.GirisYapmisKullaniciID).ToString();
             }
             catch (Exception hata)
             {
@@ -59,7 +61,7 @@ namespace AkbilYonetimiFormUI
         {
             try
             {
-                cmbBoxAkbiller.DataSource = null; //fake //yeni kodlar gelecek
+                cmbBoxAkbiller.DataSource = akbilYonetimi.Akbiller; //fake //yeni kodlar gelecek
                 cmbBoxAkbiller.DisplayMember = "AkbilNo";
                 cmbBoxAkbiller.ValueMember = "AkbilNo";
             }
@@ -91,7 +93,17 @@ namespace AkbilYonetimiFormUI
                 if (txtBakiye.Text == null || txtBakiye.Text == string.Empty)
                     throw new Exception("Yükleme miktarı belirtilmemiş!"); // mbox'lı yazılabilir
 
-                int eklenenTalimatSayisi = 0; //fake // yeni kodlar gelecek
+                Talimatlar yeniTalimat = new Talimatlar()
+                {
+                    AkbilID = cmbBoxAkbiller.SelectedValue.ToString(),
+                    OlusturulmaTarihi = DateTime.Now,
+                    YuklendiMi = false,
+                    YuklendigiTarih = null,
+                    YuklenecekMiktar = Convert.ToDecimal(txtBakiye.Text)
+                };
+                akbilYonetimi.Talimatlar.Add(yeniTalimat);
+
+                int eklenenTalimatSayisi = akbilYonetimi.SaveChanges() ; 
 
                 if (eklenenTalimatSayisi > 0)
                 {
@@ -135,11 +147,12 @@ namespace AkbilYonetimiFormUI
             {
                 if (tumunuGoster) // tumunuGoster true mu?? True ise girecek
                 {
-                    dataGridViewTalimatlar.DataSource = null; //fake
+                    dataGridViewTalimatlar.DataSource = akbilYonetimi.Akbiller; //fake
                 }
                 else
                 {
-                    dataGridViewTalimatlar.DataSource = null; //fake
+                    dataGridViewTalimatlar.DataSource = akbilYonetimi.KullanicininTalimatlari.Where(x=>x.YuklendiMi==false); //fake
+                    //dataGridViewTalimatlar.DataSource = akbilYonetimi.KullanicininTalimatlari.Where(x=>!x.YuklendiMi==false); //fake
                 }
 
                 dataGridViewTalimatlar.Columns["Id"].Visible = false;

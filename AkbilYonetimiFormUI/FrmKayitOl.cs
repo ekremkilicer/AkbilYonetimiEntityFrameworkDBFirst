@@ -1,5 +1,6 @@
 ﻿
 using AkbilYonetimiBussinessLayer;
+using AkbilYonetimiDataLayer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,7 +20,7 @@ namespace AkbilYonetimiFormUI
         {
             InitializeComponent();
         }
-       
+        AKBİLYONETİMİDBEntities akbilYonetimi = new AKBİLYONETİMİDBEntities();
 
         private void btnKayitOl_Click(object sender, EventArgs e)
         {
@@ -35,8 +36,32 @@ namespace AkbilYonetimiFormUI
                         return; // ?????
                     }
                 } // foreach bitti.
+                  //aynı emailden varsa hata ver
+                  //linq komutları entity framework ile çokça kullanılır
+                  //FirstorDefault bulduğu ilk kaydı getiriyor
 
-                int sonuc = 0;//fake
+                //select count (*) from Kullanicilar where 
+                //Email='bbbb'
+
+                //if (akbilYonetimi.Kullanicilar.FirstOrDefault(x => x.Email.ToLower() == txtEmail.Text.ToLower()) != null)
+                    if (akbilYonetimi.Kullanicilar.Count(x=>x.Email.ToLower()==txtEmail.Text.ToLower())!=0)
+                {
+                    MessageBox.Show("Bu email sistemde vardır");
+                    return;
+                }
+                Kullanicilar yeniKullanici = new Kullanicilar()
+                {
+                    
+                    DogumTarihi = dtpDogumTarihi.Value,
+                    Email = txtEmail.Text,
+                    İsim = txtIsim.Text,
+                    Soyisim = txtSoyisim.Text,
+                    KayitTarihi = DateTime.Now,
+                    Parola = GenelIslemler.MD5Encryption(txtSifre.Text)
+                };
+                akbilYonetimi.Kullanicilar.Add(yeniKullanici);
+                int sonuc = akbilYonetimi.SaveChanges();
+
                 if (sonuc > 0)
                 {
                     MessageBox.Show("Yeni Kullanıcı Eklendi");

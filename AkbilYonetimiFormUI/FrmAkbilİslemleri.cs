@@ -1,5 +1,6 @@
 ﻿
 using AkbilYonetimiBussinessLayer;
+using AkbilYonetimiDataLayer;
 using AkbilYonetimiEntityLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace AkbilYonetimiFormUI
 {
     public partial class FrmAkbilIslemleri : Form
     {
-        
+        AKBİLYONETİMİDBEntities akbilYonetimi = new AKBİLYONETİMİDBEntities();
         public FrmAkbilIslemleri()
         {
             InitializeComponent();
@@ -44,7 +45,26 @@ namespace AkbilYonetimiFormUI
                         throw new Exception("Akbil numarası sadece rakamlardan oluşmalıdır!");
                     }
                 }
-                int eklenenAkbilSayisi = 0;//fake
+                //akbil numarasından akbil zaten var mı;
+                var akbil = akbilYonetimi.Akbiller.FirstOrDefault(
+                    a=>a.AkbilNo==txtAkbilSeriNo.Text);
+                if (akbil!=null)
+                {
+                    MessageBox.Show("Bu seri numarayla akbil mevcuttur!");
+                    return;
+                }
+                Akbiller yeniAkbil = new Akbiller()
+                {
+                    AkbilNo = txtAkbilSeriNo.Text,
+                    AkbilSahibiID = GenelIslemler.GirisYapmisKullaniciID,
+                    KayitTarihi = DateTime.Now,
+                    AkbilTipi = (short)cmbBoxAkbilTipleri.SelectedValue
+                };
+                yeniAkbil.SonKullanimTarihi = yeniAkbil.KayitTarihi.AddYears(5);
+
+                akbilYonetimi.Akbiller.Add(yeniAkbil);
+                
+                int eklenenAkbilSayisi = akbilYonetimi.SaveChanges();
                 if (eklenenAkbilSayisi > 0)
                 {
                     MessageBox.Show("Yeni Akbil eklendi");
@@ -78,7 +98,8 @@ namespace AkbilYonetimiFormUI
         {
             try
             {
-                dataGridViewAkbiller.DataSource = null; // fake yeni kodlar gelecek
+                dataGridViewAkbiller.DataSource = akbilYonetimi.Akbiller;
+                // fake yeni kodlar gelecek
                 //id alanı gizlensin
                 dataGridViewAkbiller.Columns["AkbilSahibiID"].Visible = false;
                 dataGridViewAkbiller.Columns["KayitTarihi"].Width = 150;

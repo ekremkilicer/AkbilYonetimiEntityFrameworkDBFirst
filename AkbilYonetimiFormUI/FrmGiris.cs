@@ -1,5 +1,6 @@
 ﻿
 using AkbilYonetimiBussinessLayer;
+using AkbilYonetimiDataLayer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ namespace AkbilYonetimiFormUI
     public partial class FrmGiris : Form
     {
         public string Email { get; set; }
+        AKBİLYONETİMİDBEntities akbilYonetimi = new AKBİLYONETİMİDBEntities();
         public FrmGiris()
         {
             InitializeComponent();
@@ -70,9 +72,20 @@ namespace AkbilYonetimiFormUI
                         return;
                     }
                 } // foreach bitti.
-
-
-                    MessageBox.Show($"Hoşgeldiniz ... {GenelIslemler.GirisYapmisKullaniciAdSoyad}");
+                //select * from Kullanicilar where Email =' ' and Parola = ' '
+                var girisYapanKullanici =
+                      akbilYonetimi.Kullanicilar.FirstOrDefault
+                     (k => k.Email.ToLower() == txtemail.Text.ToLower() && 
+                     k.Parola == GenelIslemler.MD5Encryption(txtsifre.Text));
+                if (girisYapanKullanici==null)
+                {
+                    MessageBox.Show("Kullanici adınız ya da şifreniz yanlıştır !");
+                    return;
+                }
+                GenelIslemler.GirisYapmisKullaniciID = girisYapanKullanici.id;
+                GenelIslemler.GirisYapmisKullaniciAdSoyad =
+                    $"{girisYapanKullanici.İsim}{girisYapanKullanici.Soyisim}";
+                MessageBox.Show($"Hoşgeldiniz ... {GenelIslemler.GirisYapmisKullaniciAdSoyad}");
 
                     //AkbilYonetimiFormUI.Properties.Settings.Default.KullaniciEmail
                     if (checkBoxBeniHatirla.Checked)

@@ -52,7 +52,7 @@ namespace AkbilYonetimiFormUI
             this.cikisyapToolStripMenuItem});
             this.menuStripAkbilIslemleri.Location = new System.Drawing.Point(0, 0);
             this.menuStripAkbilIslemleri.Name = "menuStripAkbilIslemleri";
-            this.menuStripAkbilIslemleri.Size = new System.Drawing.Size(544, 24);
+            this.menuStripAkbilIslemleri.Size = new System.Drawing.Size(546, 24);
             this.menuStripAkbilIslemleri.TabIndex = 1;
             this.menuStripAkbilIslemleri.Text = "menuStrip1";
             // 
@@ -141,7 +141,7 @@ namespace AkbilYonetimiFormUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(544, 308);
+            this.ClientSize = new System.Drawing.Size(546, 308);
             this.Controls.Add(this.dataGridViewAkbiller);
             this.Controls.Add(this.btnAkbilKaydet);
             this.Controls.Add(this.groupBoxAkbilProps);
