@@ -1,4 +1,5 @@
 ﻿using AkbilYonetimiBussinessLayer;
+using AkbilYonetimiDataLayer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +15,9 @@ namespace AkbilYonetimiFormUI
 {
     public partial class FrmAyarlar : Form
     {
-       
+        AKBİLYONETİMİDBEntities akbilYonetimi = new AKBİLYONETİMİDBEntities();
+        private Kullanicilar kullanici;
+
         public FrmAyarlar()
         {
             InitializeComponent();
@@ -30,7 +33,11 @@ namespace AkbilYonetimiFormUI
         {
             try
             {
-              //yeni kodlar gelecek
+                kullanici = akbilYonetimi.Kullanicilar.FirstOrDefault(x=>x.id==GenelIslemler.GirisYapmisKullaniciID);
+                txtIsim.Text = kullanici.İsim;
+                txtSoyisim.Text = kullanici.Soyisim;
+                dtpDogumTarihi.Text = kullanici.DogumTarihi.ToString();
+
 
             }
             catch (Exception hata)
@@ -48,7 +55,11 @@ namespace AkbilYonetimiFormUI
                     MessageBox.Show("Lütfen zorunlu alanları doldurunuz!");
                     return;
                 }
-              //yeni kodlar gelecek
+                kullanici.İsim = txtIsim.Text;
+                kullanici.Soyisim = txtSoyisim.Text;
+                kullanici.DogumTarihi = dtpDogumTarihi.Value;
+                akbilYonetimi.SaveChanges();
+                MessageBox.Show("Bilgileriniz Güncellendi.");
 
 
             }

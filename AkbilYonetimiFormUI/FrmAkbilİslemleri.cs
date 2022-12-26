@@ -58,7 +58,7 @@ namespace AkbilYonetimiFormUI
                     AkbilNo = txtAkbilSeriNo.Text,
                     AkbilSahibiID = GenelIslemler.GirisYapmisKullaniciID,
                     KayitTarihi = DateTime.Now,
-                    AkbilTipi = (short)cmbBoxAkbilTipleri.SelectedValue
+                    AkbilTipi = (short)((AkbilTipleri)cmbBoxAkbilTipleri.SelectedValue)
                 };
                 yeniAkbil.SonKullanimTarihi = yeniAkbil.KayitTarihi.AddYears(5);
 
@@ -98,10 +98,13 @@ namespace AkbilYonetimiFormUI
         {
             try
             {
-                dataGridViewAkbiller.DataSource = akbilYonetimi.Akbiller;
+                dataGridViewAkbiller.DataSource = akbilYonetimi.Akbiller.ToList();
+                
                 // fake yeni kodlar gelecek
                 //id alanı gizlensin
                 dataGridViewAkbiller.Columns["AkbilSahibiID"].Visible = false;
+                dataGridViewAkbiller.Columns["Kullanicilar"].Visible = false;
+                dataGridViewAkbiller.Columns["Talimatlar"].Visible = false;
                 dataGridViewAkbiller.Columns["KayitTarihi"].Width = 150;
                 dataGridViewAkbiller.Columns["SonKullanimTarihi"].Width = 200;
                 dataGridViewAkbiller.Columns["AkbilNo"].Width = 200;
@@ -122,6 +125,7 @@ namespace AkbilYonetimiFormUI
 
         private void FrmAkbilIslemleri_Load(object sender, EventArgs e)
         {
+            txtAkbilSeriNo.MaxLength = 16;
             AkbilTipiComboyuDoldur();
             DataGridViewiDoldur();
             // datagridüzerinde hangi hücreye tıklarsam tıklıyım o satırın tamamı seçili hale gelecek.

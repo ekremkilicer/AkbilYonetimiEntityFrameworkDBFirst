@@ -15,6 +15,7 @@ namespace AkbilYonetimiDataLayer
     using System.Data.Entity.Core.Objects;
     using System.Linq;
     
+
     public partial class AKBİLYONETİMİDBEntities : DbContext
     {
         public AKBİLYONETİMİDBEntities()
@@ -35,7 +36,7 @@ namespace AkbilYonetimiDataLayer
         public virtual int SP_BekleyenTalimatSayisi(Nullable<int> kullaniciId)
         {
             var kullaniciIdParameter = kullaniciId.HasValue ?
-                new ObjectParameter("kullaniciId", kullaniciId) :
+            new ObjectParameter("kullaniciId", kullaniciId) :
                 new ObjectParameter("kullaniciId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_BekleyenTalimatSayisi", kullaniciIdParameter);

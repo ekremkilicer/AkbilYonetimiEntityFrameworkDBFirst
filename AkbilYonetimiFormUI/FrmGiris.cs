@@ -73,10 +73,11 @@ namespace AkbilYonetimiFormUI
                     }
                 } // foreach bitti.
                 //select * from Kullanicilar where Email =' ' and Parola = ' '
+                string parola = GenelIslemler.MD5Encryption(txtsifre.Text);
                 var girisYapanKullanici =
                       akbilYonetimi.Kullanicilar.FirstOrDefault
-                     (k => k.Email.ToLower() == txtemail.Text.ToLower() && 
-                     k.Parola == GenelIslemler.MD5Encryption(txtsifre.Text));
+                     (k => k.Email.ToLower() == txtemail.Text.ToLower() &&
+                     k.Parola == parola);
                 if (girisYapanKullanici==null)
                 {
                     MessageBox.Show("Kullanici adınız ya da şifreniz yanlıştır !");
@@ -115,7 +116,14 @@ namespace AkbilYonetimiFormUI
             }
         }
 
-        private void checkBoxBeniHatirla_CheckedChanged(object sender, EventArgs e)
+    
+
+        private void FrmGiris_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void checkBoxBeniHatirla_CheckedChanged_1(object sender, EventArgs e)
         {
             if (checkBoxBeniHatirla.Checked)
             {
@@ -125,11 +133,7 @@ namespace AkbilYonetimiFormUI
             {
                 AkbilYonetimiFormUI.Properties.Settings.Default.BeniHatirla = false;
             }
-        }
 
-        private void FrmGiris_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Application.Exit();
         }
     }
 }

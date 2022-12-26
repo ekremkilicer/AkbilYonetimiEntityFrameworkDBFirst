@@ -1,6 +1,7 @@
 ﻿
 using AkbilYonetimiBussinessLayer;
 using AkbilYonetimiDataLayer;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,10 +9,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace AkbilYonetimiFormUI
 {
@@ -46,9 +49,15 @@ namespace AkbilYonetimiFormUI
         {
             try
             {
-                lblBekleyenTalimat.Text=
-                akbilYonetimi.SP_BekleyenTalimatSayisi
-                    (GenelIslemler.GirisYapmisKullaniciID).ToString();
+                //lblBekleyenTalimat.Text =
+                //akbilYonetimi.SP_BekleyenTalimatSayisi
+                //    (GenelIslemler.GirisYapmisKullaniciID).ToString();
+                lblBekleyenTalimat.Text =
+                    akbilYonetimi.KullanicininTalimatlari.Where(x => x.KullaniciId == GenelIslemler.GirisYapmisKullaniciID && !x.YuklendiMi).Count().ToString();
+
+
+
+
             }
             catch (Exception hata)
             {
@@ -61,7 +70,7 @@ namespace AkbilYonetimiFormUI
         {
             try
             {
-                cmbBoxAkbiller.DataSource = akbilYonetimi.Akbiller; //fake //yeni kodlar gelecek
+                cmbBoxAkbiller.DataSource = akbilYonetimi.Akbiller.ToList(); //fake //yeni kodlar gelecek
                 cmbBoxAkbiller.DisplayMember = "AkbilNo";
                 cmbBoxAkbiller.ValueMember = "AkbilNo";
             }
@@ -103,7 +112,7 @@ namespace AkbilYonetimiFormUI
                 };
                 akbilYonetimi.Talimatlar.Add(yeniTalimat);
 
-                int eklenenTalimatSayisi = akbilYonetimi.SaveChanges() ; 
+                int eklenenTalimatSayisi = akbilYonetimi.SaveChanges();
 
                 if (eklenenTalimatSayisi > 0)
                 {
@@ -147,11 +156,11 @@ namespace AkbilYonetimiFormUI
             {
                 if (tumunuGoster) // tumunuGoster true mu?? True ise girecek
                 {
-                    dataGridViewTalimatlar.DataSource = akbilYonetimi.Akbiller; //fake
+                    dataGridViewTalimatlar.DataSource = akbilYonetimi.KullanicininTalimatlari.Where(x => x.KullaniciId == GenelIslemler.GirisYapmisKullaniciID).ToList(); //fake
                 }
                 else
                 {
-                    dataGridViewTalimatlar.DataSource = akbilYonetimi.KullanicininTalimatlari.Where(x=>x.YuklendiMi==false); //fake
+                    dataGridViewTalimatlar.DataSource = akbilYonetimi.KullanicininTalimatlari.Where(x => x.KullaniciId == GenelIslemler.GirisYapmisKullaniciID && !x.YuklendiMi).ToList(); //fake
                     //dataGridViewTalimatlar.DataSource = akbilYonetimi.KullanicininTalimatlari.Where(x=>!x.YuklendiMi==false); //fake
                 }
 
@@ -204,9 +213,9 @@ namespace AkbilYonetimiFormUI
 
         private void anamenuToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FrmIslemleri frmIslemler = new FrmIslemleri();
-            frmIslemler.Show();
-            this.Close();
+            //FrmIslemleri frmIslemler = new FrmIslemleri();
+            //frmIslemler.Show();
+            //this.Close();
         }
 
         private void talimatigerceklestirToolStripMenuItem_Click(object sender, EventArgs e)
@@ -218,11 +227,16 @@ namespace AkbilYonetimiFormUI
                 int sayac = 0;
                 foreach (DataGridViewRow item in dataGridViewTalimatlar.SelectedRows)
                 {
-                   
-                    //yeni kodlar gelecek
-                   
+
+                    //seçili rowdaki talimatId bulup bulduğumuz talimatın özelliklerini değiştirip save changes
+                    var talimatID = (int)item.Cells["Id"].Value;
+                    var talimat = akbilYonetimi.Talimatlar.FirstOrDefault(x => x.Id == talimatID);
+                    talimat.YuklendiMi = true;
+                    talimat.YuklendigiTarih = DateTime.Now;
+                    sayac += akbilYonetimi.SaveChanges();
+
                 }//foreach bitti
-                MessageBox.Show($"{sayac/2} adet talimat gerçekleşti.");
+                MessageBox.Show($"{sayac} adet talimat gerçekleşti.");
                 TalimatlariGetir();
 
             }
@@ -249,8 +263,10 @@ namespace AkbilYonetimiFormUI
                         continue;
 
                     }
-                  //yeni kodlar gelecek
-
+                    int talimatID = (int)item.Cells["Id"].Value;
+                    var talimat = akbilYonetimi.Talimatlar.FirstOrDefault(x => x.Id == talimatID);
+                    akbilYonetimi.Talimatlar.Remove(talimat);
+                    sayac += akbilYonetimi.SaveChanges();
                 }//foreach bitti
                 MessageBox.Show($"{sayac}adet talimat silindi!");
                 TalimatlariGetir();
@@ -264,6 +280,155 @@ namespace AkbilYonetimiFormUI
             }
         }
 
-      
+
+
+        private void xmlİleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // dışarı aktarılacak veriyi XML formatına getirdikten sonra 
+                //xml haldeki dosyayı kaydetmemiz lazım
+                //dosya kaydedici nesneye ihtiyacımız var . SaveDialog
+                //SaveDialog--> textbox label combo button gibi bir tooldur
+                //Kaydetme penceresini açar.
+                if (akbilYonetimi.KullanicininTalimatlari.Count() == 0)
+                {
+                    MessageBox.Show("Dışarı aktarılacak bir talimat bulunmuyor");
+                    return;
+
+                }
+                saveFileDialog1.Title = "Talimat Kaydet";
+                saveFileDialog1.Filter = "XML FORMAT | *.xml";
+                saveFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    XmlSerializer xmlSeriliazer = new XmlSerializer(typeof(List<KullanicininTalimatlari>));
+
+                    var talimatlar = akbilYonetimi.KullanicininTalimatlari.Where(x => x.KullaniciId == GenelIslemler.GirisYapmisKullaniciID).ToList();
+
+                    using (StreamWriter yazici = new StreamWriter(saveFileDialog1.FileName))
+                    {
+                        xmlSeriliazer.Serialize(yazici, talimatlar);
+
+                    }
+                    MessageBox.Show($"{talimatlar.Count}adet talimat dışarı aktarıldı.");
+                }
+            }
+
+
+            catch (Exception hata)
+            {
+                MessageBox.Show("Beklenmedik bir hata oluştu" + hata.Message);
+            }
+        }
+
+        private void jsonİleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (akbilYonetimi.KullanicininTalimatlari.Count() == 0)
+                {
+                    MessageBox.Show("Dışarı aktarılacak bir talimat bulunmuyor");
+                    return;
+
+                }
+                saveFileDialog1.Title = "Talimat Kaydet";
+                saveFileDialog1.Filter = "JSON FORMAT | *.json";
+                saveFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    JsonSerializer jsonSerializer = new JsonSerializer();
+                    var talimatlar = akbilYonetimi.KullanicininTalimatlari.Where(x => x.KullaniciId == GenelIslemler.GirisYapmisKullaniciID).ToList();
+
+                    using (StreamWriter yazici = new StreamWriter(saveFileDialog1.FileName))
+                    {
+                        jsonSerializer.Serialize(yazici, talimatlar);
+
+
+                    }
+                    MessageBox.Show($"{talimatlar.Count}adet talimat dışarı aktarıldı.");
+                }
+            }
+            catch (Exception hata)
+            {
+
+                throw;
+            }
+        }
+
+        private void xmlİleToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            //içeri aktarma işlemi bu proje için uygun değildir!
+            //Bir öğrenme amacıyla yazdık.
+            //dosya açabilmek için OpenFileDialog kullanılmalıdır.
+            openFileDialog1.Title = "XML Talimat dosyası seçiniz";
+            openFileDialog1.Filter = "XML Formatı | *.xml";
+            openFileDialog1.Multiselect = false;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var cevap = openFileDialog1.ShowDialog();
+            if (cevap == DialogResult.OK)
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<KullanicininTalimatlari>));
+                using (StreamReader okuyucu = new StreamReader(openFileDialog1.FileName))
+                {
+                    var yeniTalimatlar = (List<KullanicininTalimatlari>)xmlSerializer.Deserialize(okuyucu);
+                    foreach (var item in yeniTalimatlar)
+                    {
+                        Talimatlar t = new Talimatlar()
+                        {
+                            AkbilID = item.AkbilID,
+                            OlusturulmaTarihi = DateTime.Now,
+                            YuklendigiTarih = null,
+                            YuklendiMi = false,
+                            YuklenecekMiktar = item.YuklenecekMiktar
+
+                        };
+                        akbilYonetimi.Talimatlar.Add(t);
+                        akbilYonetimi.SaveChanges();
+
+                    }
+                }
+            }
+        }
+
+        private void jsonİleToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            //içeri aktarma işlemi bu proje için uygun değildir!
+            //Bir öğrenme amacıyla yazdık.
+            //dosya açabilmek için OpenFileDialog kullanılmalıdır.
+            openFileDialog1.Title = "XML Talimat dosyası seçiniz";
+            openFileDialog1.Filter = "JSON Formatı | *.json";
+            openFileDialog1.Multiselect = false;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var cevap = openFileDialog1.ShowDialog();
+            if (cevap == DialogResult.OK)
+            {
+                JsonSerializer jsonSerializer = new JsonSerializer();
+
+                using (StreamReader okuyucu = new StreamReader(openFileDialog1.FileName))
+                {
+                    var yeniTalimatlar = (List<KullanicininTalimatlari>)jsonSerializer.Deserialize(okuyucu,typeof(List<KullanicininTalimatlari>));
+                    foreach (var item in yeniTalimatlar)
+                    {
+                        Talimatlar t = new Talimatlar()
+                        {
+                            AkbilID = item.AkbilID,
+                            OlusturulmaTarihi = DateTime.Now,
+                            YuklendigiTarih = null,
+                            YuklendiMi = false,
+                            YuklenecekMiktar = item.YuklenecekMiktar
+
+                        };
+                        akbilYonetimi.Talimatlar.Add(t);
+                        akbilYonetimi.SaveChanges();
+                    }
+                }
+            }
+
+        }
     }
 }
+
+

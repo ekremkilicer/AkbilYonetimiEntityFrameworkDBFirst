@@ -32,6 +32,13 @@ namespace AkbilYonetimiFormUI
             this.components = new System.ComponentModel.Container();
             this.menuStripTalimat = new System.Windows.Forms.MenuStrip();
             this.anamenuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.iŞLEMLERToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xmlİleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.jsonİleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.jsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xmlİleToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.jsonİleToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.cikisyapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cmbBoxAkbiller = new System.Windows.Forms.ComboBox();
             this.dataGridViewTalimatlar = new System.Windows.Forms.DataGridView();
@@ -46,6 +53,8 @@ namespace AkbilYonetimiFormUI
             this.contextMenuStripTalimatGrid = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.talimatigerceklestirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.talimatiSilToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStripTalimat.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTalimatlar)).BeginInit();
             this.groupBoxBakiye.SuspendLayout();
@@ -57,6 +66,7 @@ namespace AkbilYonetimiFormUI
             this.menuStripTalimat.BackColor = System.Drawing.Color.DarkCyan;
             this.menuStripTalimat.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.anamenuToolStripMenuItem,
+            this.iŞLEMLERToolStripMenuItem,
             this.cikisyapToolStripMenuItem});
             this.menuStripTalimat.Location = new System.Drawing.Point(0, 0);
             this.menuStripTalimat.Name = "menuStripTalimat";
@@ -70,6 +80,61 @@ namespace AkbilYonetimiFormUI
             this.anamenuToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
             this.anamenuToolStripMenuItem.Text = "ANA MENÜ";
             this.anamenuToolStripMenuItem.Click += new System.EventHandler(this.anamenuToolStripMenuItem_Click);
+            // 
+            // iŞLEMLERToolStripMenuItem
+            // 
+            this.iŞLEMLERToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xmlToolStripMenuItem,
+            this.jsonToolStripMenuItem});
+            this.iŞLEMLERToolStripMenuItem.Name = "iŞLEMLERToolStripMenuItem";
+            this.iŞLEMLERToolStripMenuItem.Size = new System.Drawing.Size(70, 20);
+            this.iŞLEMLERToolStripMenuItem.Text = "İŞLEMLER";
+            // 
+            // xmlToolStripMenuItem
+            // 
+            this.xmlToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xmlİleToolStripMenuItem,
+            this.jsonİleToolStripMenuItem});
+            this.xmlToolStripMenuItem.Name = "xmlToolStripMenuItem";
+            this.xmlToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.xmlToolStripMenuItem.Text = "DIŞARI AKTAR";
+            // 
+            // xmlİleToolStripMenuItem
+            // 
+            this.xmlİleToolStripMenuItem.Name = "xmlİleToolStripMenuItem";
+            this.xmlİleToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.xmlİleToolStripMenuItem.Text = "XML İLE";
+            this.xmlİleToolStripMenuItem.Click += new System.EventHandler(this.xmlİleToolStripMenuItem_Click);
+            // 
+            // jsonİleToolStripMenuItem
+            // 
+            this.jsonİleToolStripMenuItem.Name = "jsonİleToolStripMenuItem";
+            this.jsonİleToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.jsonİleToolStripMenuItem.Text = "JSON İLE";
+            this.jsonİleToolStripMenuItem.Click += new System.EventHandler(this.jsonİleToolStripMenuItem_Click);
+            // 
+            // jsonToolStripMenuItem
+            // 
+            this.jsonToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xmlİleToolStripMenuItem1,
+            this.jsonİleToolStripMenuItem1});
+            this.jsonToolStripMenuItem.Name = "jsonToolStripMenuItem";
+            this.jsonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.jsonToolStripMenuItem.Text = "İÇERİ AKTAR";
+            // 
+            // xmlİleToolStripMenuItem1
+            // 
+            this.xmlİleToolStripMenuItem1.Name = "xmlİleToolStripMenuItem1";
+            this.xmlİleToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.xmlİleToolStripMenuItem1.Text = "xml ile";
+            this.xmlİleToolStripMenuItem1.Click += new System.EventHandler(this.xmlİleToolStripMenuItem1_Click);
+            // 
+            // jsonİleToolStripMenuItem1
+            // 
+            this.jsonİleToolStripMenuItem1.Name = "jsonİleToolStripMenuItem1";
+            this.jsonİleToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.jsonİleToolStripMenuItem1.Text = "json ile";
+            this.jsonİleToolStripMenuItem1.Click += new System.EventHandler(this.jsonİleToolStripMenuItem1_Click);
             // 
             // cikisyapToolStripMenuItem
             // 
@@ -175,7 +240,6 @@ namespace AkbilYonetimiFormUI
             this.txtBakiye.Name = "txtBakiye";
             this.txtBakiye.Size = new System.Drawing.Size(65, 20);
             this.txtBakiye.TabIndex = 8;
-         
             // 
             // contextMenuStripTalimatGrid
             // 
@@ -198,6 +262,10 @@ namespace AkbilYonetimiFormUI
             this.talimatiSilToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.talimatiSilToolStripMenuItem.Text = "talimatiSil";
             this.talimatiSilToolStripMenuItem.Click += new System.EventHandler(this.talimatiSilToolStripMenuItem_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // FrmTalimatIslemleri
             // 
@@ -244,5 +312,14 @@ namespace AkbilYonetimiFormUI
         private System.Windows.Forms.ContextMenuStrip contextMenuStripTalimatGrid;
         private System.Windows.Forms.ToolStripMenuItem talimatigerceklestirToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem talimatiSilToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.ToolStripMenuItem iŞLEMLERToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem xmlToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem xmlİleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem jsonİleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem jsonToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem xmlİleToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem jsonİleToolStripMenuItem1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

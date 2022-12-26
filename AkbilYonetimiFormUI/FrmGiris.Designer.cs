@@ -107,6 +107,7 @@ namespace AkbilYonetimiFormUI
             this.checkBoxBeniHatirla.TabIndex = 6;
             this.checkBoxBeniHatirla.Text = "Beni Hatırla !";
             this.checkBoxBeniHatirla.UseVisualStyleBackColor = false;
+            this.checkBoxBeniHatirla.CheckedChanged += new System.EventHandler(this.checkBoxBeniHatirla_CheckedChanged_1);
             // 
             // FrmGiris
             // 
