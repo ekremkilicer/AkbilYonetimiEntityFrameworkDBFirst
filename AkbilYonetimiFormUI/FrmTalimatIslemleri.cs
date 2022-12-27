@@ -61,7 +61,9 @@ namespace AkbilYonetimiFormUI
             }
             catch (Exception hata)
             {
-                MessageBox.Show("Beklenmedik bir sorun oluştu!" + hata.Message);
+                MessageBox.Show("Beklenmedik bir sorun oluştu!");
+                LogYoneticisi.LoguYaz($"FrmTalimatIslemleri BekleyenTalimatSayisiniGetir HATA{hata}");
+
                 // hata log
             }
         }
@@ -76,7 +78,8 @@ namespace AkbilYonetimiFormUI
             }
             catch (Exception hata)
             {
-                MessageBox.Show("Beklenmedik bir hata oluştu! " + hata.Message);
+                MessageBox.Show("Beklenmedik bir hata oluştu! ");
+                LogYoneticisi.LoguYaz($"FrmTalimatIslemleri ComboBoxaAkbilleriGetir HATA : {hata}");
                 //TODO: loglama txt dosyasına yazdır
             }
         }
@@ -132,7 +135,8 @@ namespace AkbilYonetimiFormUI
 
             catch (Exception hata)
             {
-                MessageBox.Show("Beklenmedik bir hata oluştu" + hata.Message);
+                MessageBox.Show("Beklenmedik bir hata oluştu" );
+                LogYoneticisi.LoguYaz($"FrmTalimatIslemleri btnYukle_Click HATA : {hata}");
                 //Todo:  hata loglanır
             }
         }
@@ -175,7 +179,8 @@ namespace AkbilYonetimiFormUI
             }
             catch (Exception hata)
             {
-                MessageBox.Show("Beklenmedik hata oluştu. HATA:" + hata.Message);
+                MessageBox.Show("Beklenmedik hata oluştu. HATA:");
+                LogYoneticisi.LoguYaz($"FrmTalimatIslemleri GrideTalimatlariGetir HATA : {hata}");
             }
         }
         private void checkBoxBekleyenTalimatlar_CheckedChanged(object sender, EventArgs e)
@@ -205,7 +210,8 @@ namespace AkbilYonetimiFormUI
             GenelIslemler.GirisYapmisKullaniciAdSoyad = string.Empty;
             GenelIslemler.GirisYapmisKullaniciID = 0;
             MessageBox.Show("Güle Güle");
-            FrmGiris frmGiris = new FrmGiris();
+            LogYoneticisi.LoguYaz($"Çıkış Yaptı");
+           FrmGiris frmGiris = new FrmGiris();
             frmGiris.Show();
             this.Close(); // deneme için yazdık 
 
@@ -242,7 +248,8 @@ namespace AkbilYonetimiFormUI
             }
             catch (Exception hata)
             {
-                MessageBox.Show("Beklenmedik bir hata oluştu! " + hata.Message);
+                MessageBox.Show("Beklenmedik bir hata oluştu! ");
+                LogYoneticisi.LoguYaz($"FrmTalimatIslemleri talimatigerceklestirToolStripMenuItem_Click HATA : {hata}");
             }
         }
 
@@ -276,7 +283,8 @@ namespace AkbilYonetimiFormUI
             }
             catch (Exception hata)
             {
-                MessageBox.Show("Beklenmedik bir hata oluştu! " + hata.Message);
+                MessageBox.Show("Beklenmedik bir hata oluştu! ");
+                LogYoneticisi.LoguYaz($"FrmTalimatIslemleri talimatiSilToolStripMenuItem_Click HATA :{hata}");
             }
         }
 
@@ -318,7 +326,8 @@ namespace AkbilYonetimiFormUI
 
             catch (Exception hata)
             {
-                MessageBox.Show("Beklenmedik bir hata oluştu" + hata.Message);
+                MessageBox.Show("Beklenmedik bir hata oluştu");
+                LogYoneticisi.LoguYaz($"FrmTalimatIslemleri xmlİleToolStripMenuItem_Click HATA :{hata}");
             }
         }
 
@@ -351,8 +360,8 @@ namespace AkbilYonetimiFormUI
             }
             catch (Exception hata)
             {
-
-                throw;
+                MessageBox.Show("Beklenmedik bir hata oluştu !");
+                LogYoneticisi.LoguYaz($"FrmTalimatIslemleri jsonİleToolStripMenuItem_Click HATA :{hata}");
             }
         }
 

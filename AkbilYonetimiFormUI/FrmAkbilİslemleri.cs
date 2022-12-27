@@ -65,9 +65,11 @@ namespace AkbilYonetimiFormUI
                 akbilYonetimi.Akbiller.Add(yeniAkbil);
                 
                 int eklenenAkbilSayisi = akbilYonetimi.SaveChanges();
+
                 if (eklenenAkbilSayisi > 0)
                 {
                     MessageBox.Show("Yeni Akbil eklendi");
+                    LogYoneticisi.LoguYaz($"{GenelIslemler.GirisYapmisKullaniciAdSoyad}adlı kullanıcı {yeniAkbil.AkbilNo}seri numaralı akbili ekledi");
                     DataGridViewiDoldur();
                     txtAkbilSeriNo.Clear();
                     cmbBoxAkbilTipleri.SelectedIndex = -1; //kimse seçili olmasın
@@ -80,7 +82,8 @@ namespace AkbilYonetimiFormUI
             }
             catch (Exception hata)
             {
-                MessageBox.Show("Beklenmedik hata oluştu. Mesaj:" + hata.Message);
+                MessageBox.Show("Beklenmedik hata oluştu. Mesaj:");
+                LogYoneticisi.LoguYaz($"FrmAkbilIslemleri btnAkbilKaydet_Click HATA:{hata}");
             }
         }
 
@@ -118,7 +121,8 @@ namespace AkbilYonetimiFormUI
             }
             catch (Exception hata)
             {
-                MessageBox.Show("Beklenmedik bir hata oluştu! " + hata.Message);
+                MessageBox.Show("Beklenmedik bir hata oluştu! ");
+                LogYoneticisi.LoguYaz($"FrmAkbilIslemleri DataGridViewiDoldur HATA: {hata}");
                 //TODO: loglama txt dosyasına yazdır
             }
         }

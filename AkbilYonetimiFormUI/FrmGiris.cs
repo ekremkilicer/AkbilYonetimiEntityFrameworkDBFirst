@@ -87,6 +87,7 @@ namespace AkbilYonetimiFormUI
                 GenelIslemler.GirisYapmisKullaniciAdSoyad =
                     $"{girisYapanKullanici.İsim}{girisYapanKullanici.Soyisim}";
                 MessageBox.Show($"Hoşgeldiniz ... {GenelIslemler.GirisYapmisKullaniciAdSoyad}");
+                LogYoneticisi.LoguYaz($"{GenelIslemler.GirisYapmisKullaniciAdSoyad}adlı kullanıcı giriş yaptı");
 
                     //AkbilYonetimiFormUI.Properties.Settings.Default.KullaniciEmail
                     if (checkBoxBeniHatirla.Checked)
@@ -104,7 +105,8 @@ namespace AkbilYonetimiFormUI
             }
             catch (Exception hata)
             {
-                MessageBox.Show("Beklenmedik hata oluştu! HATA:" + hata.Message);
+                MessageBox.Show("Beklenmedik hata oluştu! HATA:");
+                LogYoneticisi.LoguYaz($"FrmGiris GirisYap metodu HATA : + {hata}");
             }
         }
 
